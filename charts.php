@@ -146,6 +146,34 @@ include "config.php";
 	echo "<script> jobDistribution('".$status_array."'); </script>";		
 	?>
       <hr>
+	  
+	  
+	  <div>
+		<table class="table table-striped">
+			<tr>
+				<th>Job name</th>
+				<th>Occurences</th>
+				<th>Percentage</th>
+				<th>User</th>
+			</tr>
+			
+	  <?php
+	  $totalJobs = mysql_fetch_object(mysql_query("SELECT COUNT(*) as numCount FROM jobs"));
+	  $topJobs = mysql_query("SELECT USER, COUNT(*) as total, JOBNAME FROM `jobs` GROUP BY JOBNAME ORDER BY total DESC LIMIT 0,10");
+	  
+	  	while($topList = mysql_fetch_object($topJobs)) {
+	  ?>
+		<tr>
+			<td><?php echo $topList->JOBNAME; ?></td>
+			<td><?php echo $topList->total; ?></td>
+			<td><?php echo round(100*($topList->total/$totalJobs->numCount),2); ?></td>
+			<td><?php echo $topList->USER; ?></td>
+		</tr>
+	  <?php
+	  }
+	  ?>
+		</table>
+	</div>
 
       <div class="footer">
         <p>&copy; SURFsara logs 2014</p>
